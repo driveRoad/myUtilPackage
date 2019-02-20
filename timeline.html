@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  
+</head>
+<body>
+  hello
+  <script>
+      for (var index = 0; index < 100000; index ++) {
+        console.log(index);
+      }
+    </script>
+</body>
+</html>
+
+
+<!-- 打开过一次页面后，再次刷新页面，内容会先展示，再消失，然后再按照正常的渲染流程去渲染 -->
+<!-- 正常的渲染，同步加载 -->
+  <!-- 解析到script标签时，会暂停dom的解析（形成dom树的过程），同时暂停页面渲染（绘制）,这个时候下载js文件并执行，执行结束后
+    ，再继续之前暂停的dom解析的过程。之所以在head中（或者在body的中间位置），for循环时，页面上会同时出现body中的内容，是因为只是阻塞了dom的解析，但没有阻塞渲染，渲染是同时的，所以会同时出现
+   -->
+   疑问，不是应该边解析边渲染吗，为什么<script></script>在body最后面还是没有显示p标签上的内容呢
+   <!-- 上面的内容的证实，可通过页面的状态变动来证明 -->
+   <!-- loading -->
+   <!-- interactive -->
+   <!-- DomContentLoad -->
+   <!-- load -->

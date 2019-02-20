@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- <link rel="stylesheet" href="./bfc.css"> -->
+  <style>
+      /* 第三种规则,可通过设置ele2为bfc,根据第4条规则，则会出现多栏布局 */
+      /* .outer {
+        display: inline-block;
+        background: yellow;
+        width: 300px;
+      }
+      .ele1 {
+        width: 100px;
+        height: 150px;
+        float: left;
+        background: aqua;
+      }
+      .ele2 {
+        height: 200px;
+        background: violet;
+      } */
+      
+
+      /* 清除浮动,浮动会带来撑不起父级容器的高度,需要清除浮动带来的这些后果，撑不起的原因是非bfc，计算高度的时候不会把浮动元素的高度计算在内，所以需要父级容器触发bfc */
+      /* .outer {
+         border: 5px solid #fcc;
+         width: 300px;
+         overflow: hidden;
+      }
+      .ele1,.ele2 {
+        border: 5px solid #f66;
+        width: 100px;
+        height: 100px;
+        float: left;
+      } */
+
+      /* margin重叠,当两个盒子处在同一个bfc内， 上面盒子的margin-bottom和下面盒子的margin-top只有一个生效（大的值生效）, 即为发生了重叠。解决方法就是把其中一个元素再包一层。除非这个包的容器的bfc,当不在同一个bfc内的时候，就不会发生重叠 */
+
+      /* di */
+      .wrap {
+        
+      }
+      .outer {
+        width: 200px;
+        height: 115px;
+        border:1px solid;
+        display: table-cell;
+        vertical-align: middle
+      }
+      .outer .ele1 {
+        
+      }
+  </style>
+</head>
+<body>
+  <!-- 
+    1.浏览器根据写的css样式生成css tree, 和dom tree结合成render tree, 浏览器根据最后生成的render tree渲染页面。具体到页面上的样式根据css规则来渲染的，但css提供了一些额外的渲染规则，bfc就是其中的一个规则，css中的一些样式会让盒子触发这个bfc规则，bfc翻译过来虽然是块级格式上下文，其实就是约定了一个规则：当使用了某些
+    css样式的时候，就触发了bfc规则，在渲染的时候，除了渲染指定的css样式，还会额外对触发bfc规则的盒子使用bfc的规则。
+
+
+    2.触发bfc的方式
+      display: inline-block  flex grid table table-cell
+      position: absolute fixed
+      float: left right
+      overflow: hidden
+      根元素
+
+    3. bfc的规则，就是触发bfc后，会额外对盒子产生哪些影响
+      1.内部的box会在垂直方向，一个接一个地放置? 不理解
+      2.Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠
+      3. 每个元素的margin box的左边， 与包含块border box的左边相接触，即使存在浮动也是如此。
+      4.bfc 的区域不会与float重叠
+      5.计算bfc的高度时，里面的浮动元素也会参与计算
+      6.bfc是页面上的一个隔离的独立容器，容器里的子元素不会影响到外面的元素，反之也如此
+
+    4. 下面就通过例子来解释上面的规则
+
+   -->
+   <!-- 1. 垂直方向，一个接一个，啥意思，我设置display:inline-block, 触发了bfc,里面的子元素不应该时横着排列吗 -->
+   <div class="wrap">
+    <div class="outer">
+      <span class='ele1'>元素1</span>
+    </div>
+   </div>
+   
+
+</body>
+</html>

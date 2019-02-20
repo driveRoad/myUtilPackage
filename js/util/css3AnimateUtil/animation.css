@@ -1,0 +1,128 @@
+/* 弹跳： bounce */
+/**
+  animation: 动画名称（通过关键帧来定义每一帧的动画），动画时间
+  animation-name:
+  animation-duration:
+  animation-timing-function: 动画函数： linear(动画是匀速的)，ease:动画以慢速开始，以慢速结束， cubic-bezier(n,n,n,n),里面的值是从0到1的值，按照这个函数进行动画
+  animation-iteration-count: 动画次数
+  animation-direction:规定动画是否在下一周期中逆向播放
+  animation-play-state:动画播放状态，可暂停
+**/
+
+/* animation 只是规定了设计的动作什么时候执行，执行时间、执行次数、执行状态，具体的动作需要在keyframe帧中定义，
+定义不同状态下的元素属性，然后扔给animation,它会按照指令去执行
+*/
+
+/**
+  动画之一:
+    transform: rotate(度数)， 旋转了多少度,这个属性规定了对元素进行旋转、伸缩、位移、倾斜
+    transform: translate(x,y) translate3d(x,y,z),translateX(x),translateY(y).进行不同轴的位移
+**/
+.bounce {
+  -webkit-animation-name: bounceAnimate;
+  animation-name: bounceAnimate;
+  /* -webkit-transform-origin: center bottom; */
+  /* transform-origin: center bottom; */
+}
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+}
+
+
+@-webkit-keyframes bounceAnimate {
+  /* from 表示的是0%， to表示100% */
+  from,
+  20%,
+  53%,
+  80%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%,
+  43% {
+    -webkit-animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    -webkit-transform: translate3d(0, -30px, 0);
+    transform: translate3d(0, -30px, 0);
+  }
+
+  70% {
+    -webkit-animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    -webkit-transform: translate3d(0, -15px, 0);
+    transform: translate3d(0, -15px, 0);
+  }
+
+  90% {
+    -webkit-transform: translate3d(0, -4px, 0);
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+
+@keyframes bounceAnimate {
+  from,
+  20%,
+  53%,
+  80%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%,
+  43% {
+    -webkit-animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    -webkit-transform: translate3d(0, -30px, 0);
+    transform: translate3d(0, -30px, 0);
+  }
+
+  70% {
+    -webkit-animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    -webkit-transform: translate3d(0, -15px, 0);
+    transform: translate3d(0, -15px, 0);
+  }
+
+  90% {
+    -webkit-transform: translate3d(0, -4px, 0);
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+
+/* flash: 闪现 */
+.flash {
+  animation-name: flash;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+}
+@keyframes flash {
+  from,
+  30%,
+  50%,
+  80% ,
+  to
+  {
+    opacity: 1;
+  }
+
+  60%,
+  
+  90% {
+    opacity: 0;
+    
+  }
+
+}

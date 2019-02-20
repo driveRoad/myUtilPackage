@@ -1,0 +1,22 @@
+.outer {
+  display: inline-block;
+  background: yellow;
+  width: 300px;
+}
+.ele1 {
+  width: 100px;
+  height: 150px;
+  background: aqua;
+  margin-bottom: 100px;
+
+}
+.ele2 {
+  width: 100px;
+  height: 200px;
+  background: violet;
+  margin-top:100px;
+}
+
+.ele2-wrap {
+  overflow: hidden;
+}

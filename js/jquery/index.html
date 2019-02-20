@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+  <script src="fastclick.js"></script>
+</head>
+<body>
+  <script>
+    /**
+     *  jquery无非就是强大的元素选择器，因为是操作dom的，所以需要灵活的dom选择
+     *  jquery提供工具函数灵活的处理dom相关的事情，比如trim等
+     *  jquery提供兼容问题解决方案，比如ajax，事件，只关心业务，而不用去关心底层及浏览器间的兼容问题
+     *  jquery提供灵活的插件机制，可以扩展jquery方法
+     * 
+     */
+  </script>
+  <script>
+    /**
+      * fastclick的问题
+      * 输入框唤起键盘困难，需要双击或者按住不动：
+      *   排除: 在安卓中没有问题，首先看看是不是ios webview的问题，后来发现使用UIwebview的问题，这个苹果官方不再使用，换了WKWebview,解决
+      *        后来，我又在uc浏览器中遇到了这个问题，就确定下来不是webview的问题，还需要排查页面中到底使用了什么。后来看到页面中引入了一个地图的js,这个js又引入了
+      *        fastclick.js。然后就看了下fastclick.js的源码，（理论上应该去掉fastclick,ios上不需要）git上的issue上看看是不是faskclick的 bug,找到了问题，要重写focus方法
+      *        FaskClick.prototype.focus(){调用元素的focus, date,time类型的元素则设置光标位置}
+      *   原因：移动端浏览器为了区分双击和单机，点击事件有一个300ms的延迟，所以需要引入fastclick解决300ms的延迟问题。 fastclick监听touchend事件，并在该事件中模拟触发click事件，并且屏蔽掉真正的click事件，防止二次触发,ios端的部分浏览器会触发touchend事件，在touchend事件里进行了一系列的判断,执行了this.focus方法，focus方法在input下没有执行元素的focus方法，获取不到焦点，所以无法弹出键盘
+      *        
+      *   解决方案： 重写ontouchend方法。之所以这个能解决，就是因为没有执行focus方法。
+      *            重写focus方法，无论什么情况下调用元素的focus方法（）
+      *   focus方法实现：
+      *     判断如果当前表单元素是不是有setSelection方法并且不是date,month,time类型的input元素，则执行focus方法，其它类型的不执行focus方法（不知道为啥）
+      
+      *   不需要的引入的场景：
+      *     1. chrome 32+或者安卓中使用width=device-width的meta页面没有300ms延迟，不需要引用。部分安卓需要设置禁用缩放：user-scalable=no,这个会导致双指缩放功能
+      *     2.IE11 可以使用touch-action: manipulation来禁止双击缩放，IE10使用-ms-touch-action: manipulation
+      *     3. safari浏览器下不触发touchend事件
+      * 
+      *   延伸：解决点击事件延迟的其它方法
+      *        tab事件：zepto
+      *        禁用缩放
+      *        更改默认视口宽度
+      *        指针事件
+      *   引用：     https://www.jianshu.com/p/16d3e4f9b2a9
+      * 
+      * 
+      *   fastclick源码分析：
+      *     1.noNeed: 列出了哪些情况下不需要使用fastclick，直接返回true
+      *               目前就chrome +32或者安卓不需要使用，直接返回true
+      *               meta标签使用user-scalable=no的直接返回true
+      *               IE11或者IE10下使用touch-action样式的直接返回true
+      *     2. 注册touchstart, touchmove,touchend, click, touchcancle事件，安卓额外需注册mouseover,mousedown,mouseup事件。部分元素在安卓下触发的是mousedown事件
+      *     3. needsclick: 决定元素是否需要手动触发click事件，不需要手动触发的包括disabled的元素或者type=file的元素，这两种就使用原生的click事件，剩余的元素根据是否有needsclick class来判断
+      *     4. needsfocus: 是否需要触发focus方法，只有submit不需要，其它的根据class是否有needsfocus
+      *     5. sendclick: 手动触发点击事件，在安卓下触发的是mousedown事件，原理就是通过document.createEvent();创建一个Event对象，调用Event的initMouseEvent方法初始化一个对象，最后调用元素的dispatch，手动派发这个event对象
+      *     6  接下里就是实现touchstart,touchend,touchmove,touchcancle事件，实现mouseover, mousedown,mouseup事件
+      *     7. co
+      *     
+      */  
+     $(document).ready(function(){
+        FastClick.attach(document.body);
+     });
+  
+  </script>
+
+  <div>
+    <label>姓名:</label>
+    <input type="date" name="name" value="", placeholder="请输入您的姓名">
+    <label>年龄</label>
+    <input type="text" name="name" value="", placeholder="请输入您的姓名">
+  </div>
+
+</body>
+</html>
