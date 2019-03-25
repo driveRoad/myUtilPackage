@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script> -->
+</head>
+<body>
+
+  <div id="ip">
+    防抖
+  </div>
+  <div id="jie">
+    节流
+  </div>
+  <script>
+    var a = 'chuo';
+    var myworker = new Worker('./webworker.js', {name:'myworker'} );
+    myworker.addEventListener('message', function(e) {
+      console.log('main thred accept message\n', e);
+    }, false);
+
+    myworker.postMessage("hello my child worker");
+
+    function debounce(fn) {
+      var timer = null;
+      return function() {
+        clearTimeout(timer);
+        timer = setTimeout(()=> {
+          fn.apply(this, arguments);
+        },500);
+      }
+    }
+
+    function throttle(fn) {
+          var cantrue = true;
+          return function() {
+            if (!cantrue) return;
+            cantrue = false;
+            setTimeout(function(){
+              fn.apply(this, arguments);
+              cantrue = true
+            }, 500);
+          }
+        }
+
+    function sayHi() {
+      console.log('防抖成功');
+    }
+
+    function sayJie() {
+      console.log('节流成功');
+    }
+
+    var ip = document.getElementById('ip');
+    var jie = document.getElementById('jie');
+    ip.addEventListener('click', debounce(sayHi));
+    jie.addEventListener('click', throttle(sayJie))
+  </script>
+  
+</body>
+</html>

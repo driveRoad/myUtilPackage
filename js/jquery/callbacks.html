@@ -1,0 +1,110 @@
+<!-- 了解jquery的callbacks机制，jquery解决回调的办法 -->
+<!-- callbacks使用了工厂模式，即为根据传递的参数返回不同的callback对象 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<body>
+  
+  <script>
+    // myCallbacks，
+    // 简单的就根据callback的几个参数入手： once（只执行一次，执行完即reset所有参数）, memory【记忆功能，当fire执行之后，再次add的时候，会把之前的参数带过来，自动执行】, stopOnFalse（如果有一个函数返回false,剩下的不执行，就是把list置为空，firIndex置为0）,
+    var jquery = {};
+  
+    jquery.__proto__.myCallbacks = function(options) {
+      var opotions = arguments[0] || '';
+      var list = [];
+      var fireIndex = 0; // 索引记录，当前要执行的函数的索引
+
+      var fired = false; //记录是否有被是否执行过
+
+      var args = []
+      
+      var fire = function() {
+        for (; fireIndex < list.length; fireIndex++) {
+          list[fireIndex].apply(window, args);
+        }
+        if ( options && options.indexOf('once') != -1) {
+          list = [];
+          fireIndex = 0;
+        }
+      }
+
+      return {
+        add: function(func) {
+          list.push(func);
+          if (options && options.indexOf('memory') != -1 && fired) {
+            fire();
+          }
+          return this;
+        },
+        fire: function() {
+          args = arguments;
+          fireIndex = 0;
+          fired = true;
+          fire();
+        },
+
+        get: function() {
+          return list;
+        },
+        
+        // arr 指的就是list, list.indexOf(elem, i) ==> return i
+        inArray: function(elem, arr, i) {
+          return arr === null ? -1 : [].indexOf.call(arr, elem ,i);
+        },
+        remove: function() {
+          // 删除掉其中的一个函数， 首先找到这个函数在数组中的位置，然后使用splice删除，如果删除的已经执行过了,firIndex--
+          var self = this;
+          jQuery.each(arguments, function(_, arg) {
+            var index;
+            while((index = self.inArray(arg, list, index)) > -1) {
+              list.splice(index,1);
+              if (index <= fireIndex) {
+                fireIndex--;
+              }
+            }
+          });
+          return this;
+        },
+
+        // disable就是reset所有的参数
+        disable: function() {
+          list = [];
+          return this;
+        }
+      }
+    }
+    
+  </script>
+
+<script>
+    var cb = jquery.myCallbacks();
+    function a() {
+      console.log('aaa');
+    }
+    function b() {
+      console.log('bbb');
+    }
+    function c() {
+      console.log('ccc');
+    }
+    cb.add(a);
+    cb.add(b);
+    cb.add(c);
+    
+    cb.remove(a);
+    
+    cb.remove(b);
+    cb.fire();
+
+    
+  </script>
+
+</body>
+</html>

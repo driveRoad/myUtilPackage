@@ -7,24 +7,46 @@
   
 </head>
 <body>
-  hello
+  <!-- <script src="timeline.js" async="async"></script> -->
+  <!-- <script src="timeline.js" defer="defer"></script> -->
+  <script src="timeline.js"></script>    
+  <!-- 以上可以看出，在async和defer中可以打出readyState得状态是interactive,可以取到dom,同步的话则不会 -->
+  <!-- 同步js不可以拿到dom，而异步的则可以，说明是在文档解析后才执行的，也就是在readyState变为interactive后 -->
+  
+  <span id="ceshi">hello</span>
+  
   <script>
-      for (var index = 0; index < 100000; index ++) {
-        console.log(index);
-      }
-    </script>
+    
+      document.onreadystatechange= function(){
+        // console.log(document.readyState);
+      } 
+      // 正常的js文件下载完就执行
+      // defer的js下载完不会立即执行，等到整个页面解析完成才会执行，可以在内部写js代码
+      // async www3c标准，文档加载完立即执行，只能加载外部脚本，不能在内部写js代码
+
+      // img灯塔模式。只设置src.不添加到页面里，只会加载，作预加载
+
+      // 动态创建script标签，如果没有appendChild到body中，则只下载不执行，如果在后面紧接着执行test方法，则报错，因为还在下载中，执行的相当快，所以没有。解决方法就是注册onload事件
+
+      // --------------------------------------------------------------------------------------------------------------------
+      // 浏览器的加载时间线，记录浏览器的加载过程，起始点创建了一个document 开始
+      // 创建document 对象， 开始解析web页面，解析html元素和他们的文本， 设置document.readyState='loading'
+        //2. 加载link, 创建一个线的线程加载link css, 并继续解析文档
+        //3. 加载外部script,并且没有设置async, defer,浏览器加载， 并阻塞，等待js加载完成后并执行该脚本，然后继续解析文档；  也就是外部js会阻塞文档解析，如果报错了，则不解析文档了
+        //4. 加载外部js, 设置了async,defer， 对于async，脚本加载完成后立即执行。
+        //5. 遇到img, 先正常解析dom结构，然后浏览器异步加载src,
+        //6. 当文档解析完成，document.readyState='interactive';
+        //7. 文档解析完毕后，所有设置defer的 js脚本按序执行
+        //8.  document对象触发domContentloaded事件，这也标志这执行顺序从同步脚本执行阶段进入事件阶段
+        //9. 当所有async的脚步加载完成并执行后，img等加载完成后，document,readystate = 'compleate'
+        //10. 触发window.onload事件
+  </script>
+  
+
+  <script>
+    // 到底什么会阻塞渲染呢？，后续继续研究
+  </script>
 </body>
 </html>
 
-
-<!-- 打开过一次页面后，再次刷新页面，内容会先展示，再消失，然后再按照正常的渲染流程去渲染 -->
-<!-- 正常的渲染，同步加载 -->
-  <!-- 解析到script标签时，会暂停dom的解析（形成dom树的过程），同时暂停页面渲染（绘制）,这个时候下载js文件并执行，执行结束后
-    ，再继续之前暂停的dom解析的过程。之所以在head中（或者在body的中间位置），for循环时，页面上会同时出现body中的内容，是因为只是阻塞了dom的解析，但没有阻塞渲染，渲染是同时的，所以会同时出现
-   -->
-   疑问，不是应该边解析边渲染吗，为什么<script></script>在body最后面还是没有显示p标签上的内容呢
-   <!-- 上面的内容的证实，可通过页面的状态变动来证明 -->
-   <!-- loading -->
-   <!-- interactive -->
-   <!-- DomContentLoad -->
-   <!-- load -->
+   

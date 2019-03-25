@@ -1,0 +1,192 @@
+<!-- jquery的整体架构目录 -->
+
+
+<!-- 
+          工具方法： $.fn
+          $.ready()
+          复杂选择器: Sizzle
+          回调对象:队函数的统一管理
+          延迟对象：对异步的统一管理, $.defererd
+          浏览器检测功能： $.support
+          数据存储： $.data
+          队列方法： 执行顺序的管理 queue | dequeue()
+          对元素，属性，的操作
+          dom操作
+          样式操作
+          模块化
+          事件操作方法
+          ajax
+          动画
+          extend
+          fn.extend : jquery的扩展
+
+jquery -->
+
+          <!-- 首先要会用，再去了解其原理，底层实现，用不起来，不知道他的使用场景，看原理只会一头雾水 --> -->
+
+
+
+          <!-- 首先，先熟悉jquery的api的使用用法 -->
+          <!-- 选择器 -->
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Document</title>
+            <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+          </head>
+          <body>
+            <div class="section1">
+              hello
+              <div class="inner-section1">
+                world
+                <span class="inner-section1-child1"></span>
+              </div>
+              <span class="innder-divider1"></span>
+            </div>
+            <span class='divider1'></span>
+            <span class="divider11"></span>
+            <div class="section2">
+              <span class="innder-section1-child1">
+                <span class="inner-section1-child1-child1"></span>
+              </span>
+              <div class="innder-section2"></div>
+            </div>
+            <span class="divider2"></span>
+            <input type="text" name="test1" id="test" >
+            <input type="text" name="test2" id="">
+            <div>
+              hello
+            </div>
+
+
+
+            <ul>
+              <li>test1</li>
+              <li>test2</li>
+              <li>test3</li>
+              <li>test4</li>
+              <li>test5</li>
+            </ul>
+
+           
+            <script>
+              // 元素选择器
+              // console.log($('div'));// 选择出两个元素
+              // console.log($('span'));// 把页面上所有的该元素都选择出来
+              // console.log($('div, span')); //选出7个元素，把所有的div 或者span都选出来
+
+              // // 层级选择器, ancestor descendant $('div span'); element > element:
+              // console.log($('div span'))// 后代选择器，选出三个，把div下面的所有span元素选出来，不管是不是直接子代，还是孙子代
+              // console.log($('div > span')) // 直接后代选择器，只会筛选出div下面的，对于class=divider1的是选不出来的， 上吗的那个是或的关系，等价于$('div') + $('span'),所有的子代，不仅仅是直接子代，包括子代的子代
+              // console.log($('div + span'))// 筛选出两个class=divider1和divider2和inner-divider1三个，这个是筛选统计直接跟在div后面的，不是其子代
+              // console.log($('div ~ span')) // 和上一个一样，选出同辈的元素。这个和上面的一样，但是这个可以匹配同辈的多个元素，上面的只能匹配一个
+
+              // // 基本选择器
+              // console.log($('div:first'));// 筛选出目标元素的第一个元素，返回第一个section1
+              // console.log($('div:not(.section2)'));// 排除某个指定的元素，但该指定的元素里的子元素还是能选中的
+              // console.log($('div:odd'));// 把所有的目标元素组成一个数组，不管是不是子元素，都统一排序
+              // console.log($('div:eq(2)'));// 和上面的一样，从数组里选择指定的那一个
+              // console.log($('div:gt(1)'));// 大于某一个
+              // console.log($('dvi:lt(1)'));// 选择小于某一个
+              // console.log($('div:last')); //选择最后一个
+              // $('#test').focus();
+              // setTimeout(function(){
+              //   console.log($(':focus'));// 选择获取焦点的元素
+              // },0)
+
+              // 内容选择器
+              // console.log($('div:contains("hello")'));
+              // console.log($('div:empty'));// 选择div没有子元素或者内容的
+              // console.log($('div:has(.innder-section1-child1)'))// 选择目标元素有指定那个元素的
+              // console.log($('div:parent'));// 和empty是互反的
+
+              // // 属性选择器
+              // console.log($('span[class="divider1"]'))
+              // console.log($('input[name="test1"]'))
+
+              // 子元素选择器, :first-child(:first), :last-child(:last), nth-child,(eq), nth-last-child()(倒数第几个) 
+              // console.log($('ul > li:first-child').text());
+              // console.log($('ul > li:first').text());
+              // console.log($('ul > li:last').text());
+              // console.log($('ul > li:last-child').text());
+              // console.log($('ul > li:eq(2)').text());
+              // console.log($('ul > li:nth-child(3)').text());
+
+              // 表单元素
+                // :checkbox
+                // :submit
+                // ....
+            </script>
+
+
+            <!-- jquery的插件机制 -->
+
+
+
+
+            <!-- juqery的查找api -->
+
+            <script>
+              // 查找children
+              // console.log($('.section1').children()); // 返回两个元素，直接返回其直接子元素，子元素的元素不会返回,直接使用css选择器不好做
+              // // console.log($('.setion1 > class:first + slibing'))
+              // // 该函数的源码： $('.serction')[0]传给children作为参数，并且.firstChild,再找到其兄弟元素,取兄弟元素通过for循环不停的找nextSibling对象，这个对象指的是其第一个兄弟元素
+              
+              // // first
+              // console.log($('li').first()); //  获取第几个都是通过jquery类数组对象的[i]获取的
+
+              // // last同first一样
+
+              // // closest
+
+              // console.log($('.inner-section1').closest('div')) // 返回了元素本身，这个函数的查找规则： closest从当前元素开始匹配查找，逐级向上直到发现匹配的元素然后体制，只返回0或者1个元素。是通过parentNode找到的父元素。找到也是push到一个数组，调用Sizzle的unique返回
+              // console.log($('.inner-section1-child1').closest('div'))// 返回1个
+              // //parents
+              // console.log($('.inner-section1-child1').parents('div')) //返回两个。从父元素开始查找，逐级网上找，找到push到一个数组里，再根据传的正则筛选出需要的，返回多个（循环使用parentNode，找到匹配的就push到数组，然后返回）
+              
+              // // next
+              // console.log($('.inner-section1-child1').next()); // 是通过dom 的nextSibling
+
+              // // prev
+              // console.log($('.inner-section1-child1').prev()) //通过dom的preiousSibling
+
+              // // nextAll
+              // console.log($('.inner-section1-child1').nextAll()) //递归通过dom的previousSibling
+
+              // // prevAll
+              // console.log($('.inner-section1-child1').prevAll()) //递归通过dom的previousSibling
+
+              // 
+
+              // find强大的功能。调用的Sizzle选择器，
+              // 如果参数为字符串，通过filterl
+              
+            </script>
+
+            <script>
+              // jquery的事件委托机制: on方法， delegate方法。jquery1.7之后，不推荐使用delegate, live方法， 但是jquery的事件委托实现方式有如下几种： delegate, on, bind, live,底层调用的都是on, unbind, undelegate都是调用的off事件。
+              // 并非所有的事件都能冒泡： submit, focus, change , load
+              // $(document).on('click', function() {
+              //   console.log('冒泡到document');
+              // });
+              // $('ul').on('click', function() {
+              //   console.log('被阻止冒泡了');
+              // })
+
+              $('ul').delegate('li', 'click', function(e) {
+                console.log(e.target);
+                console.log(e.currentTarget);
+                
+              })
+              $('ul').on('click', 'li',function(e) {
+                console.log(e.target || e.srcElement);
+                console.log(e.currentTarget);
+              });
+
+              
+            </script>
+
+          </body>
+          </html>

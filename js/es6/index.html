@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <div>
+      <input type="text" name="age" id="age" value="" style="border: 1px solid">
+      <div style="margin-top:10px">
+        <label for="" style="vertical-align:super">展示数据:</label> <span id="show-age" style="width:30px;height:30px;border:1px solid;display:inline-block"></span>
+      </div>
+    </div>
+  <!-- <script>
+    // es6练习过程,箭头函数：
+    /**
+     * 1.不用写function关键字
+     * 2.不能使用new关键字，没有原型
+     * 3.参数名不能重复
+     * 4.可以不使用
+     * 5.内部arguments this 由定义时最近的外围最接近一层的非箭头函数的arguments,this决定，尤其是this是由定义是外围的非箭头函数环境决定的。
+     */
+
+    //  第五点的例子
+    // var a = 'outerObj';
+    let obj = {
+      a: 'innerObj',
+      fn: () => {
+        console.log(this.a);
+      }
+    };
+    obj.fn();
+    // 打印出来就是outerObj
+    
+    let obj2 = {
+      a: 'innerObj',
+      fn() {
+        return () => {
+          console.log(this.a);
+        }
+      }
+    }
+    obj2.fn()();
+    // 打印出innerobj, 因为定义箭头函数的时候外围的fn内部的this就是指的是obj2
+    
+    let obj3 = {
+      a: 'innerObj',
+      fn: function() {
+        setTimeout(function() {
+          console.log(this.a);
+        }, 500);
+      }
+    }
+    obj3.fn();
+    // 打印出的是undefined
+
+    let obj4 = {
+      a: 'innerObj',
+      fn: function() {
+        setTimeout(() => {
+          console.log(this.a);
+        }, 500);
+      }
+    }
+    obj4.fn();
+    // 所以打印出了innerObj
+  </script> -->
+  <!-- <script>
+    // 数据劫持，Object.defineProperty  ==> 引出reflect和proxy, 后面的数据双向绑定就是使用的reflect和proxy来实现的
+    // 作用： 双向数据绑定的核心方法，主要做数据劫持操作（监控属性变化），同时是后期ES6中很多语法糖底层实现的核心方法。
+    var obj = {};
+    // Object.defineProperty(obj, "name", {
+    //   value: 'chumo',
+    //   writable: false,
+    //   enumerable: false,
+    //   configurable: false
+    // });
+    // console.log(obj);
+
+    // 数据劫持，利用defineProperty检测数据的变化， 目标是实现数据和视图的双向绑定
+    let inputObj = document.getElementById('age');
+    inputObj.oninput = function(e) {
+      // 调用update更新视图
+      obj.name = inputObj.value;
+      update(obj);
+    }
+    
+    // 更新数据
+    function update(updateVaule) {
+      document.getElementById('show-age').innerText = obj.name;
+    }
+    obj.name = 'nihao';
+    watchData(function(updateVaule) {
+        update(updateVaule);
+    });
+    // setTimeout(() => {
+    //   obj.name = 'hello world';  
+    // }, 0);
+
+    // 以上是输入引起数据变化，接下来是数据变化了，怎么反应到视图上，比如网络请求回来，改变object,不用再使用js设置视图上的值
+    
+    // 监听数据变化,怎么获取设置的数据？？？
+    var result = '';
+    function watchData(fun) {
+      Object.defineProperty(obj, 'name', {
+        set(name) {
+          console.log('数据更新了');
+          result = name;
+          fun(name);
+        },
+        get() {
+          return result;
+        }
+      });
+    }
+
+    // 以上就是监听对象的数据变化，对于监听的对象上的数据要每个属性都设置监听，并且有个额外的对象存储变化的数据，以在get中获取，并且改变对象只能在监听之后，否则没有作用。写起来也比较繁碎。接下来就引入Proxy,Reflect
+
+  </script> -->
+  <!-- <script>
+    // Proxy生成一个代理对象，对原对象的操作转移到代理对象上，并拦截原对象上的get,set,defineProperty等方法
+
+    var obj = {
+      _prop:'foo',
+      prop:'foo',
+    };
+    var proxyObj = new Proxy(obj, {
+      get(target, propKey) {
+        if (propKey.indexOf("_") > -1) {
+          throw new Error(`Invalid attempt to read private ${propKey} property`);
+          return false;
+        }
+        return target[propKey];
+      },
+      set(target, propKey, receiver) {
+        watchData(target, propKey, receiver, function(receiver) {
+          update(receiver);
+        });
+        target[propKey] = receiver;
+      },
+
+      // 可以用来隐藏某些私有属性，拦截的是hasProperty运算符，典型的是in运算符,当使用in运算符的时候，会进行拦截
+      has(target, propKey) {
+        if (propKey.indexOf('_') > -1) {
+          return false;
+        }
+        return target[propKey];
+      },
+
+    });
+    
+    // 更新视图
+    function update(receiver) {
+      document.getElementById('show-age').innerText = receiver;
+    }
+    
+    // 设置数据对象监控
+    function watchData(target, propKey, receiver, fun) {
+      Object.defineProperty(target, propKey, {
+        set(receiver) {
+          fun(receiver);
+        },
+        get() {
+          return receiver;
+        }
+      })
+    }
+
+    // proxyObj.name = 'afadfaf'; // 数据改变后，视图上数据被改掉
+    // console.log(proxyObj._prop); // 读取私有属性时候，报错
+    // console.log("_prop" in proxyObj); // 对for....in循环没有用。那这个has运算符有啥用，这种东西真的是发展的半成品
+    // console.log("_prop" in obj); // 这个依然返回true
+
+    //  另外，看看Proxy提供的拦截器可以干些什么，对其中拦截的方法逐一分析
+    // 1. 可以更改数组的取数，可以取负值, 数组本身就是对象，key是序列号
+    function createProxy(...arg) {
+      var handler = {
+        get(target, propKey, receiver) {
+          var index = Number(propKey);
+          if (index < 0) {
+           propKey = String(target.length + index);
+          } 
+          return Reflect.get(target, propKey, receiver); //不懂Reflect是什么意思
+        }
+      }
+
+      var temp = [];
+      temp.push(...arg);
+      return new Proxy(temp, handler);
+    }
+
+    var arr = createProxy(1,2,4,5);
+    console.log(arr[-1]);
+
+    // 2.可以实现链式调用，其实很简单，最后把链式调用的结果通过get方法读出来，之前的调用每次都返回proxy对象，在get里判断逻辑，如果是get了，则把之前的函数依次执行
+    var pipe = (function() {
+      return function(value) {
+        var funStack = [];
+
+        var oxProxy = new Proxy({},{
+          get: function(target, propKey, receiver) {
+            
+            if (propKey === 'get') {
+              return funStack.reduce(function(val, fn){
+                return fn(val);
+              }, value)
+            }
+            funStack.push(window[propKey]);
+            return oxProxy;
+          }
+        });
+        return oxProxy;
+      }
+    })();
+    var double = n => n * 2;
+    var pow = n => n * n;
+    var reverseInt = n => n.toString().split("").reverse().join("") || 0; // 倒序排列
+    console.log(pipe(3).double.pow.reverseInt.get)
+
+    // 3.生成dom节点
+    const dom = new Proxy({}, {
+      get(target, property) {
+        return function(attrs = {}, ...children) {
+          const el = document.createElement(property);
+          for (let prop of Object.keys(attrs)) {
+            el.setAttribute(prop, attrs[prop]);
+          }
+          for (let child of children) {
+            if (typeof child === 'string') {
+              child = document.createTextNode(child);
+            }
+            el.appendChild(child);
+          }
+          return el;
+        }
+      }
+    });
+
+    const el = dom.div({},
+      'Hello, my name is',
+      dom.a({href:'baidu.com'},'Mark'),
+      dom.ul({},
+        dom.li({},'The web'),
+        dom.li({}, 'Food'),
+        dom.li({}, '...actually that')
+      )
+    );
+    document.body.appendChild(el);
+
+    // set方法，接收四个参数，原对象，属性，值，代理对象。当原对象的属性是不可写的时候，set不起作用， 这个方法会拦截赋值操作。执行set方法
+
+    // apply方法。同样拦截proxy对象的方法执行或者对象调用apply或者call方法的
+
+
+
+
+  </script> -->
+  <script>
+    // Promise原理分析
+    // Promise为了解决回调地狱的问题引入的，但依然避免不了回调函数。基本上可以用同步的写法一次回调拿到异步的执行结果。扔给promise对象的异步执行，就是等于不使用Promise执行一样，是libuv线程池去执行异步操作，底层执行完后，消息通信到js层，然后注册回调时间，等到主线程执行结束，从异步事件队列中取出注册的异步事件，执行相应的回调。
+    // 模拟实现Promise.1. new Promise(fun),fun是同步执行2.接收两个参数，两个参数一个表示异步成功，一个表示失败。3.有一个then方法，方法接受两个参数，一个成功回调，一个失败回调4.then链式调用5.then方法可以抛出一场，被后面的then捕捉5.then方法执行的时候，要处理异步事件，否则then执行了，异步才执行结束，then方法就拿不到执行结果了。
+
+    // Promise就是一个状态几，三种状态，处理中 ---》 失败  处理中 ---> 成功
+    
+    function MyPromise(fun) {
+      this.status = 'pending'
+      this.resultValue = '';
+      let resolve = resolvedValue => { // 这个地方之所以使用箭头函数，不能使用es5的函数定义，否则内部的this取的是window
+        this.status = 'success';
+        this.resultValue = resolvedValue;
+      }
+
+      let reject = rejectedValue => {
+        this.status = 'failed';
+        this.resultValue = rejectedValue;
+      }
+      fun(resolve, reject);
+    }
+
+    MyPromise.prototype.then =function (refillFun, rejectFun){ //这个地方不能改成箭头函数，否则内部的this变成了window, es5的函数谁调用this指向谁，箭头函数的规则就是
+
+      var nextPromise = new MyPromise((resolve, reject) => {
+        let _self = this;
+        setTimeout(() => {
+          if (_self.status === 'success') {
+          let returnValue = refillFun(_self.resultValue);
+            resolve(returnValue);
+          }
+          if (_self.status === 'falied') {
+            let retusltValue = rejectFun(_self.resultValue);
+            reject(resultValue);
+          }
+          if (_self.status === 'pending') {
+            // 如果还在处理中，不做任何处理
+          }
+
+        },0)
+      });
+      return nextPromise;
+    }
+
+
+
+
+
+
+  // 调用自己的Promise
+  // new MyPromise((resolve, reject) => {
+  //   if (Math.round(Math.random(10) * 10) > 5) {
+  //     resolve(1);
+  //   } else {
+  //     reject(0);
+  //   }
+  // });
+
+  // 问题是同步执行了，里面的异步执行怎么办。传给异步事件的两个回调函数，最终调用哪个还是异步事件的回调决定，下面这种情况就是没有处理异步情况，导致then执行了，异步事件才结束，因为then是在主线程中的，异步事件走的是异步事件队列
+    // let myPromise = new MyPromise((resolve, reject) => {
+    //   setTimeout(function() {
+    //     resolve(10);
+    //     console.log('异步执行结束');
+    //   }, 1000)
+      
+    // });
+    // myPromise.then((value) => {
+    //   // 获取异步执行结果
+    //   console.log('获取异步执行成功结果');
+    //   console.log(value);
+    // }, (value) => {
+    //   console.log('失败了，抛出异常');
+    //   throw new Error(value);
+    // })
+
+    // 按照上面的代码运行，then执行到status==='pending'了，把setTimeout的0写成1000了
+
+    // 改进
+    let myPromise = new MyPromise((resolve, reject) => {
+      setTimeout(function() {
+        resolve(10);
+      }, 0)
+      
+    });
+    myPromise.then((value) => {
+      // 获取异步执行结果
+      console.log('第一个then');
+      return value;
+    }, (value) => {
+      
+    }).then((value)=>{
+      console.log('第二个then');
+      console.log(value);
+      return value;
+    },() => {
+
+    }).then((value) => {
+      console.log('第三个then');
+      console.log(value);
+      return value;
+    }, (value) => {
+      console.log(value);
+    }).then().then((value) => {
+      console.log('第四个then');
+    }, (value) => {
+
+    });
+
+
+    // 接下来是then方法的链式调用
+    
+  </script>
+</body>
+</html>

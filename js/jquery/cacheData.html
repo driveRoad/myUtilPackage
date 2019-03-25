@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<body>
+  <!-- jquery的数据缓存方案 -->
+  <!-- jquery的目的是为了操作dom的，提供了方便的选择器和链式调用，并封装了原生js，提供了便捷的接口，但是又提供了直接操作dom的方法，减少dom的操作 -->
+  <div id="test" class="test1" data-name='zll'>hello</div>
+  <script>
+    var el = $('#test')
+    // el.data('name', 'chumo');
+    // console.log(el.data('name')); // 数据缓存的目的是把原先埋在dom上的数据转移到了dom对应的jquery对象上，所谓的缓存只是操作dom变为操作内存对象，速度更快
+    // console.log(el.data(undefined,'name'));
+    // el.data({'name':'zll', 'age':12},'chumo');
+    console.log(el.data('name'))
+
+    // 实现原理
+    // 通过 jquery.extend扩展了jquery对象的, 在jquery对象上增加了一个expando字符串，这个字符串"jQuery" + Math.random().replace(/\D/g,''), 去调数字后的一个随机字符串
+    // 然后以这个字符串作为key，在获取的元素对象上增加这个属性，在获取埋在缓存上的值的时候，通过el.data(), 找到这个extendo对应的字符串，获取到埋的对象，el.data('name') => el['jQueryexpando']['name']
+    // 如果没有设置data值，但在页面上埋了点，则通过data也可以取到，源码中判断了当从jqueryexpando中取不到，则尝试从dom上获取
+
+    // 源代码：在jQuery实例上扩展了方法，data,removeData,两个方法，其中data方法根据传的值对应set和get功能data(undefined, 'name') => 调用Data的取值功能。data('name','chumo')=>对应设置功能， data('name')=>对于取值功能。jquery扩展的这个实例方法只是做了各种参数判断，最终是由内部的Data对象实现缓存功能
+
+    // jQuery.fn.extend({
+    //   data: function(key, value){
+    //     var elem = this[0];
+    //     var data;
+    //     var attrs = elem && elem.attributes;
+    //     if (key === undefined) {
+    //       if (this.length) {
+    //         data = dataUser.get(elem);
+    //         if (elem.nodeType === 1 && !dataPriv.get(elem, 'hasDataAttrs')) {
+    //           i = attrs.length;
+    //           while(i--) {
+
+    //           }
+    //           dataPriv.set(elem, 'hasDataAttrs', true); // 不送这个干啥的
+    //         }
+    //       }
+    //       return data;
+    //     }
+      
+    //     // key传的是object, 循环设置，忽略后面的参数
+    //   if (typeof key === 'object') {
+    //     return this.each(function() {
+    //       dataUser.set(this, key);
+    //     })
+    //   }
+
+    //   return access(this, function(value) {
+    //     // 正常的设置两个参数，key,value，如果value为空，则取值
+    //     if (elem && value === undefined) {
+    //       data = dataUser.get(elem, key);
+    //       if (data !== undefined) {
+    //         return data;
+    //       }
+    //       data = dataAttr(elem, key);// 如果从缓存对象上取不到，则尝试从data-*属性去取值
+          
+    //     }
+        
+    //   })
+    // }
+    // })
+
+
+
+    
+    
+  </script>
+</body>
+</html>

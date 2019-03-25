@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+  <div style="width:100px; height:100px; background:green" id='post'>
+    post提交数据
+  </div>
+
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+
+  <!-- <script>
+    // get请求， 后端加上requestMapping注解，在方法里依次按照参数名写上, 比如：hello(string name, string pwd),来获取get请求的参数.
+    $('#post').on('click', function(e) {
+      // console.log(e);
+      $.ajax({
+        url:'http://10.43.8.137:8080/hello?name=zll&&pwd=123',
+        type:'GET',
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(err) {
+          console.log(err);
+        }
+
+      })
+    });
+  </script> -->
+
+  <!-- 上面的请求就会导致跨域拦截 -->
+  <!-- 在 java controller中添加跨域注解即可：@CrossOrigin(origins = "http://10.43.8.137:10180", maxAge = 3600) ， 在response header中就会多处access-control-allow-origin, access-control-allow-method, access-control-allow-headers-->
+  <!--  -->
+
+
+  <!-- <script>
+    $('#post').on('click', function(e) {
+      $.ajax({
+        url:'http://10.43.8.137:8080/hello?name=zll&pwd=123',
+        type:'GET',
+        // dataType:'application/x-www-form-urlencoded',
+        dataType:'text',
+        success: function(data) {
+          console.log(data);
+        },
+        error: function(err) {
+          console.log(err);
+        }
+
+      })
+    });
+  </script> -->
+
+  <!-- dataType改为text可以了，换成其他的报parseerror.因为reponse header中返回的type:text/plain, 所以这里的dataType要为text.这个dataType表示接收的数据类型，所以去看header中有一个Accept: text/plain.-->
+
+
+  <!-- <script>
+      $('#post').on('click', function(e) {
+        $.ajax({
+          url:'http://10.43.8.137:8080/api/v1/hello?name=zll&pwd=123',
+          type:'GET',
+          dataType:'json',
+          success: function(data) {
+            console.log(data);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+  
+        })
+      });
+    </script> -->
+  <!-- 设置了response返回的content-type类型为application/json, 请求头里的为application/json,最后返回的就是 {name: zll.pwd:123} -->
+
+  <!-- 由上总结，请求头里的type: application/json, text/plain; application/x-www-form-urlencode -->
+
+  <!-- <script>
+      $('#post').on('click', function(e) {
+        $.ajax({
+          url:'http://10.43.8.137:8080/api/v2/hello?name=zll&pwd=123',
+          type:'GET',
+          dataType:'html',
+          success: function(data) {
+            $(data).appendTo(document.body);
+            
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        })
+      });
+    </script> -->
+  <!-- 返回的html中含有script的话，会在插入到dom文档中执行, 这个时候返回的script标签会被执行 -->
+
+
+  <!-- 设置请求的content-type -->
+  <!-- <script>
+      $('#post').on('click', function(e) {
+        $.ajax({
+          url:'http://10.43.8.137:8080/api/v1/hello?name=zll&pwd=你好',
+          type:'GET',
+          dataType:'json',
+          // contentType: 'application/x-www-form-urlencoded',
+          contentType: 'application/json',
+          success: function(data) {
+            console.log(data);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        })
+      });
+    </script> -->
+  <!-- 当使用content-type为application/json的时候，发送了options请求，为urlencoded的时候没有发options请求，对于get请求两者看不出什么区别 -->
+
+  
+  <!--  -->
+  
+  <!-- <script>
+      var data1 = {
+        name: 'zll',
+        pwd:'123'
+      };
+      $('#post').on('click', function(e) {
+        $.ajax({
+          url:'http://10.43.8.137:8080/api/v3/hello',
+          type:'POST',
+          dataType:'json',
+          // contentType: 'application/x-www-form-urlencoded',
+          contentType: 'application/json;charset=utf-8',
+          data:JSON.stringify(data1),
+          success: function(data) {
+            console.log(data);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        })
+      });
+    </script> -->
+
+    <!-- post请求到了后端的get方法，也是跨域, get方法请求到了post也是跨域 -->
+    <!-- 如果使用application/x-www-form-urlencoded, 则后端接受请求的方法和get一样，hello3(HttpServletResponse res, String name, String pwd)，这样可以取到，但是设置为application/json的时候则取不到了 -->
+    <!-- 使用了application/json的type后， 报了400的错误，原因是传给后端的type表面了是json，传的data为"name=zll&pwd=123", 所以认为参数不合法，是一个不合理的请求；改为json字符串后，又报了500，原因是后端反序列化失败了，用的jsonobject不对" -->
+
+    <!-- 如果说明使用的是表单提交或者www-form-urlencoded的话，则可以使用"name=zll&pwd=123,"" -->
+
+    <!-- <script>
+        var data1 = {
+          name: 'zll',
+          pwd:'123'
+        };
+        $('#post').on('click', function(e) {
+          $.ajax({
+            url:'http://10.43.8.137:8080/api/v4/hello',
+            type:'POST',
+            dataType:'json',
+            contentType: 'application/x-www-form-urlencoded',
+            // contentType: 'application/json;charset=utf-8',
+            data:"name=zll&pwd=123",
+            success: function(data) {
+              console.log(data);
+            },
+            error: function(err) {
+              console.log(err);
+            }
+          })
+        });
+    </script> -->
+  
+
+    <!-- 上面查看了type,content-type的机制 -->
+    <!-- jsonp跨域, jsonp只支持get请求，不支持post请求， 浏览器只对 xmlHttpRequest请求有跨域限制，对script, img, link ref等是没有跨域限制的，所以jsonp就是利用script标签的src原理进行跨域操作 -->
+    <!-- <script>
+        var data1 = {
+          name: 'zll',
+          pwd:'123'
+        };
+        $('#post').on('click', function(e) {
+          $.ajax({
+            url:'http://10.43.8.137:8080/api/v5/hello',
+            type:'POST',
+            dataType:'jsonp',
+            contentType: 'application/x-www-form-urlencoded',
+            // contentType: 'application/json;charset=utf-8',
+            data:"name=zll&pwd=123",
+            success: function(data) {
+              console.log(data);
+            },
+            error: function(err) {
+              console.log(err);
+            }
+          })
+        });
+    </script> -->
+    <!-- <script>
+        function getDataCallback(data) {
+          console.log(data);
+        }
+      </script>
+    <script src="http://10.43.8.137:8080/api/v5/hello?callback=getDataCallback"></script> -->
+
+    <!-- 上面实现了jsonp跨域，后端要在response中setContentType为text/javascript -->
+
+
+    <!-- http缓存 -->
+    <script>
+        var data1 = {
+          name: 'zll',
+          pwd:'123'
+        };
+        $('#post').on('click', function(e) {
+          $.ajax({
+            url:'http://10.43.8.137:8080/hello?name=zll&pwd=123',
+            type:'GET',
+            cache:true,
+            dataType:'text',
+            // contentType: 'application/x-www-form-urlencoded',
+            success: function(data) {
+              console.log(data);
+            },
+            error: function(err) {
+              console.log(err);
+            }
+          })
+        });
+    </script>
+
+
+    
+</body>
+</html>
