@@ -40,6 +40,22 @@
         //8.  document对象触发domContentloaded事件，这也标志这执行顺序从同步脚本执行阶段进入事件阶段
         //9. 当所有async的脚步加载完成并执行后，img等加载完成后，document,readystate = 'compleate'
         //10. 触发window.onload事件
+
+
+
+        // link标签的属性： preload, prefetch ,dns-pretch
+        // link的 rel=preload, 则该样式或者脚本，会异步加载该资源文件，不会阻塞当前页面的解析，执行时机则在后面通过script引入这个js，来执行，这个时候已经加载完了。
+        // 不理解prefetch
+
+
+
+        // script标签的defer async属性
+          // 1. defer 和asnyc在网络读取这块是一样的，都是异步的
+          // 2. 它俩的差别在于脚本下载完成之后何时执行，显然defer是最接近我们对于应用脚本加载和执行的要求的
+          // 3. 关于defer, 它是按照加载顺序执行脚本的
+          // 4. async是一个乱序的主，对它来说脚本的加载和执行是紧紧挨着的，所以不管怎么样声明顺序，只要它加载完就立刻执行
+          // 5. async对于应用脚本的用户不大。因为它完全不考虑依赖，对于没有依赖关系的确是非常合适的
+          // 淘宝，天猫使用的都是async， 不知道为什么不使用defer
   </script>
   
 
