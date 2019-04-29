@@ -1,0 +1,63 @@
+@fontColor: red; 
+@base: #f938ab;
+@width: 100px;
+@height: @width + 20px;
+
+
+#bundle() {
+  .button {
+    display: block;
+    border:1px solid black;
+    &:hover {
+      background-color: white;
+    }
+  }
+}
+
+.bordered {
+  border-top: dotted 1px black;
+  border-bottom: solid 2px black;
+}
+
+.box-shadow(@style, @c) when(iscolor(@c)) {
+  -webkit-box-shadow: @style @c;
+  box-shadow: @style @c;
+}
+.box-shadow(@style, @c) when(isnumber(@c)) {
+  .box-shadow(@style, rgba(0,0,0,@c));
+}
+.outer {
+  width: 300px;
+  height: 800px;
+  background-color: green;
+  color: color(@fontColor);
+  .inner {
+    .box-shadow(0 0 5px, 50%);
+    color: saturate(@base, 0%);
+  }
+  .inner2 {
+    width: @width;
+    height: @height;
+    background: violet;
+    .bordered();
+  }
+
+  .inner3 {
+    width: @width;
+    height: @height;
+    background: wheat;
+    .bordered();
+  }
+  .inner4 {
+    width: @width;
+    height: @height;
+    #bundle.button();
+  }
+}
+// 首先是变量。变量之间还可以计算。
+
+// 函数。定义的函数，内置的函数，传参， 分支判断
+
+// 混合mixins
+
+// 命名空间

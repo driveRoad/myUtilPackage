@@ -8,6 +8,41 @@
   <script src="fastclick.js"></script>
 </head>
 <body>
+
+    <div style="width:100px; height:100px; background:green" id='post'>
+        post提交数据
+    
+        <input type="text" name="test" value="" placeholder="测试输入框" id="test" >
+      </div>
+    
+      <script>
+        var inputObj = document.getElementById('test');
+        // 在冒泡阶段监听
+        // inputObj.addEventListener('touchstart', function(e){
+        //   console.log('冒泡阶段touchstart');
+        //   e.stopPropagation();
+        //   // e.preventDefault(); // 阻止了默认事件。默认事件就是focus和click方法
+        //   return false;
+        // }, false);
+    
+        // inputObj.addEventListener('touchend', function() {
+        //   console.log('冒泡阶段touchend');
+        // }, false);
+    
+        // inputObj.addEventListener('click', function(e) {
+        //   console.log('冒泡阶段click');
+        // }, false);
+    
+        // inputObj.addEventListener('click', function(e) {
+        //   console.log('捕获阶段的click');
+        //   // e.stopPropagation();
+        // }, true);
+        // inputObj.addEventListener('focus', function() {
+        //   console.log('冒泡的onfocus');
+        // },false);
+      </script>
+
+
   <script>
     /**
      *  jquery无非就是强大的元素选择器，因为是操作dom的，所以需要灵活的dom选择
@@ -64,12 +99,12 @@
   
   </script>
 
-  <div class="test">
+  <!-- <div class="test">
     <label>姓名:</label>
     <input type="date" name="name" value="", placeholder="请输入您的姓名">
     <label>年龄</label>
     <input type="text" name="name" value="", placeholder="请输入您的姓名">
-  </div>
+  </div> -->
 
 </body>
 </html>

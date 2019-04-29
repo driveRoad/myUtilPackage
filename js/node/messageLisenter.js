@@ -90,7 +90,12 @@ const gen = function* () {
   const r2 = yield thunkifyReadFile('data.js'); //以同步的形式，同时保证了两个文件的读取顺序
 }
 
+
+// co里面接收的就是一个generator函数,在generator函数里通过同步的方式写好
+co(gen());
+
 const g = gen();
+
 g.next().value((err, data) => {
   //拿到第一个文件读取回调
   console.log(data);
@@ -100,4 +105,10 @@ g.next().value((err, data) => {
   });
 });
 
-//thunkify还是回调嵌套
+//thunkify还是回调嵌套, 上面写
+
+function co() {
+
+}
+
+// generator是循环执行里面的

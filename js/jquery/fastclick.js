@@ -330,7 +330,6 @@
 			length = targetElement.value.length;
 			targetElement.setSelectionRange(length, length);
 		} else {
-			
 			targetElement.focus();
 		}
 	};
@@ -525,16 +524,19 @@
 		var forElement, trackingClickStart, targetTagName, scrollParent, touch, targetElement = this.targetElement;
 
 		if (!this.trackingClick) {
+			console.log('aaaa');
 			return true;
 		}
 
 		// Prevent phantom clicks on fast double-tap (issue #36)
 		if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+			console.log('bbbbb');
 			this.cancelNextClick = true;
 			return true;
 		}
 
 		if ((event.timeStamp - this.trackingClickStart) > this.tapTimeout) {
+			console.log('ccccc');
 			return true;
 		}
 
@@ -552,6 +554,7 @@
 		// for this to function correctly, it must be called *after* the event target is checked!
 		// See issue #57; also filed as rdar://13048589 .
 		if (deviceIsIOSWithBadTarget) {
+			console.log('ddddd');
 			touch = event.changedTouches[0];
 
 			// In certain cases arguments of elementFromPoint can be negative, so prevent setting targetElement to null
@@ -561,6 +564,7 @@
 
 		targetTagName = targetElement.tagName.toLowerCase();
 		if (targetTagName === 'label') {
+
 			forElement = this.findControl(targetElement);
 			if (forElement) {
 				this.focus(targetElement);
@@ -575,10 +579,11 @@
 			// Case 1: If the touch started a while ago (best guess is 100ms based on tests for issue #36) then focus will be triggered anyway. Return early and unset the target element reference so that the subsequent click will be allowed through.
 			// Case 2: Without this exception for input elements tapped when the document is contained in an iframe, then any inputted text won't be visible even though the value attribute is updated as the user types (issue #37).
 			if ((event.timeStamp - trackingClickStart) > 100 || (deviceIsIOS && window.top !== window && targetTagName === 'input')) {
+				console.log('eee');
 				this.targetElement = null;
 				return false;
 			}
-
+			console.log('.....');
 			this.focus(targetElement);
 			this.sendClick(targetElement, event); // 模拟发出click事件
 
@@ -680,7 +685,6 @@
 	 * @returns {boolean}
 	 */
 	FastClick.prototype.onClick = function(event) {
-		console.log('clicl');
 		var permitted;
 
 		// It's possible for another FastClick-like library delivered with third-party code to fire a click event before FastClick does (issue #44). In that case, set the click-tracking flag back to false and return early. This will cause onTouchEnd to return early.
@@ -721,7 +725,7 @@
 			layer.removeEventListener('mouseup', this.onMouse, true);
 		}
 
-		layer.removeEventListener('click', this.onClick, true);
+		layer.removeEventListener('click', this.onClick, true); //  捕获阶段做click的拦截，剩余的都是冒泡阶段拦截
 		layer.removeEventListener('touchstart', this.onTouchStart, false);
 		layer.removeEventListener('touchmove', this.onTouchMove, false);
 		layer.removeEventListener('touchend', this.onTouchEnd, false);

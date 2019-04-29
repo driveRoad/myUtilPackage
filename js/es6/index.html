@@ -5,14 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 500px;
+    }
+    .inner {
+      flex: 1;
+      text-align: center;
+      color:#fff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 25% 0;
+      height: 0;
+      background: #eaeaea;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div>
+    <div class="wrapper">
+      <div class="inner">A</div>
+    </div>
+    <!-- <div>
       <input type="text" name="age" id="age" value="" style="border: 1px solid">
       <div style="margin-top:10px">
         <label for="" style="vertical-align:super">展示数据:</label> <span id="show-age" style="width:30px;height:30px;border:1px solid;display:inline-block"></span>
       </div>
-    </div>
+    </div> -->
   <!-- <script>
     // es6练习过程,箭头函数：
     /**
@@ -257,6 +285,9 @@
 
 
   </script> -->
+  <!-- <script src="./inherits.js"> -->
+    <!-- <script src="./es6-data-extend.js"></script> -->
+  </script>
   <script>
     // Promise原理分析
     // Promise为了解决回调地狱的问题引入的，但依然避免不了回调函数。基本上可以用同步的写法一次回调拿到异步的执行结果。扔给promise对象的异步执行，就是等于不使用Promise执行一样，是libuv线程池去执行异步操作，底层执行完后，消息通信到js层，然后注册回调时间，等到主线程执行结束，从异步事件队列中取出注册的异步事件，执行相应的回调。
@@ -264,42 +295,47 @@
 
     // Promise就是一个状态几，三种状态，处理中 ---》 失败  处理中 ---> 成功
     
-    function MyPromise(fun) {
-      this.status = 'pending'
-      this.resultValue = '';
-      let resolve = resolvedValue => { // 这个地方之所以使用箭头函数，不能使用es5的函数定义，否则内部的this取的是window
-        this.status = 'success';
-        this.resultValue = resolvedValue;
-      }
+    // function MyPromise(fun) {
+    //   this.status = 'pending'
+    //   this.resultValue = '';
+    //   let resolve = resolvedValue => { // 这个地方之所以使用箭头函数，不能使用es5的函数定义，否则内部的this取的是window
+    //     this.status = 'success';
+    //     this.resultValue = resolvedValue;
+    //   }
 
-      let reject = rejectedValue => {
-        this.status = 'failed';
-        this.resultValue = rejectedValue;
-      }
-      fun(resolve, reject);
-    }
+    //   let reject = rejectedValue => {
+    //     this.status = 'failed';
+    //     this.resultValue = rejectedValue;
+    //   }
+    //   fun(resolve, reject);
+    // }
 
-    MyPromise.prototype.then =function (refillFun, rejectFun){ //这个地方不能改成箭头函数，否则内部的this变成了window, es5的函数谁调用this指向谁，箭头函数的规则就是
+    // MyPromise.prototype.then =function (refillFun, rejectFun){ //这个地方不能改成箭头函数，否则内部的this变成了window, es5的函数谁调用this指向谁，箭头函数的规则就是
+      
+    //   if (!refillFun) {
+    //     // 如果then传递的是空参数
+        
+    //   }
 
-      var nextPromise = new MyPromise((resolve, reject) => {
-        let _self = this;
-        setTimeout(() => {
-          if (_self.status === 'success') {
-          let returnValue = refillFun(_self.resultValue);
-            resolve(returnValue);
-          }
-          if (_self.status === 'falied') {
-            let retusltValue = rejectFun(_self.resultValue);
-            reject(resultValue);
-          }
-          if (_self.status === 'pending') {
-            // 如果还在处理中，不做任何处理
-          }
+    //   var nextPromise = new MyPromise((resolve, reject) => {
+    //     let _self = this;
+    //     setTimeout(() => {
+    //       if (_self.status === 'success') {
+    //       let returnValue = refillFun(_self.resultValue);
+    //         resolve(returnValue);
+    //       }
+    //       if (_self.status === 'falied') {
+    //         let retusltValue = rejectFun(_self.resultValue);
+    //         reject(resultValue);
+    //       }
+    //       if (_self.status === 'pending') {
+    //         // 如果还在处理中，不做任何处理
+    //       }
 
-        },0)
-      });
-      return nextPromise;
-    }
+    //     },0)
+    //   });
+    //   return nextPromise;
+    // }
 
 
 
@@ -335,39 +371,89 @@
     // 按照上面的代码运行，then执行到status==='pending'了，把setTimeout的0写成1000了
 
     // 改进
-    let myPromise = new MyPromise((resolve, reject) => {
-      setTimeout(function() {
-        resolve(10);
-      }, 0)
+    // let myPromise = new MyPromise((resolve, reject) => {
+    //   setTimeout(function() {
+    //     resolve(10);
+    //   }, 0)
       
-    });
-    myPromise.then((value) => {
-      // 获取异步执行结果
-      console.log('第一个then');
-      return value;
-    }, (value) => {
+    // });
+    // myPromise.then((value) => {
+    //   // 获取异步执行结果
+    //   console.log('第一个then');
+    //   return value;
+    // }, (value) => {
       
-    }).then((value)=>{
-      console.log('第二个then');
-      console.log(value);
-      return value;
-    },() => {
+    // }).then((value)=>{
+    //   console.log('第二个then');
+    //   console.log(value);
+    //   return value;
+    // },() => {
 
-    }).then((value) => {
-      console.log('第三个then');
-      console.log(value);
-      return value;
-    }, (value) => {
-      console.log(value);
-    }).then().then((value) => {
-      console.log('第四个then');
-    }, (value) => {
+    // }).then((value) => {
+    //   console.log('第三个then');
+    //   console.log(value);
+    //   return value;
+    // }, (value) => {
+    //   console.log(value);
+    // }).then().then((value) => {
+    //   console.log('第四个then');
+    // }, (value) => {
 
-    });
+    // });
 
 
     // 接下来是then方法的链式调用
     
   </script>
+
+  <script>
+
+
+// console.log(lengthOfLongestSubstring('pwwkew'));
+
+  </script>
+
+  <script>
+    // 合并两个有序链表
+    function ListNode(val) {
+      this.val = val;
+      this.next = null;
+    }
+
+    var mergeTwoLists = function(l1, l2) {
+      var head = new ListNode(0);
+      var curr = head;
+      var p=l1, q=l2;
+      while(p!=null && q!=null) {
+        if (p.val < q.val) {
+          curr.next = new ListNode(p.val);
+          curr = curr.next;
+          p = p.next;
+        } else if (p.val == q.val) {
+          curr.next = new ListNode(p.val);
+          curr = curr.next;
+          curr.next = new ListNode(p.val);
+          curr = curr.next;
+          p = p.next;
+          q = q.next;
+        } else {
+          curr.next = new ListNode(q.val);
+          curr = curr.next;
+          q = q.next;
+        }
+      }
+      if (p!== null) {
+        curr.next = p;
+      }
+      if (q!=null) {
+        curr.next = q;
+      }
+      return head.next;
+    };
+    
+    
+    
+  </script>
 </body>
+
 </html>

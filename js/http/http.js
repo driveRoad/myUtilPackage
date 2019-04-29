@@ -1,13 +1,45 @@
-// 1.content-type，在request-header中有，在response-header中也有，两者有什么用
-// 在request-header中有一个accept家族，accpet:text/html, application/xml等，表示客户端能够接受的结果类型，不是这个类型的不接收
-// 所以response-header中要有一个 content-type, 表示根据请求头中的type来设置应该返回的数据类型
+function step(n) { if (n == 1) return 1; if (n == 2) return 2; return step(n - 1) + step(n - 2) }
 
-// request-header中的content-type表示客户端要传给服务端的数据类型，即数据以什么形式提交给服务端
-// 提交的类型有:application/x-www-form-urlencoded;  multipart/form-data  ; text/plain
-// 表单提交以什么形式？
 
-var http = require('http');
+function step1(n, flag1, flag2) {
+  if (n <= 2 ) {
+    return flag2;
+  }
+  return step1(n-1, flag2, flag1 + flag2);
+}
 
-http.createServer( (req, res) => {
-  
-}).listen(18080);
+var set = new Set(['I', 'have', 'a','book', 'good']);
+function isInclude(str) {
+  var arr = str.split(' ');
+  for (let item of arr) {
+    if (!set.has(item)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// 手动封装网络请求库
+var httpRequest = (function() {
+  // 获取参数
+   function httpRequest(options) {
+      var defaultOptions = {
+        url: '',
+        type: 'post',
+        contentType: 'application/x-www-form-urlencode',
+        success:()=>{},
+        fail:()=> {}
+      };
+      Object.assign(defaultOptions, options);
+
+      // 原型上添加方法
+      Object.assign(httpRequest.prototype, {
+
+      });
+
+
+   }
+
+
+
+})(window);

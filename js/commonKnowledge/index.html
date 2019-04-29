@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script> -->
+  <script src="./selfHttpAjax.js"></script>
 </head>
+
 <body>
 
   <div id="ip">
@@ -15,10 +18,10 @@
   <div id="jie">
     节流
   </div>
-  <script>
+  <!-- <script>
     var a = 'chuo';
-    var myworker = new Worker('./webworker.js', {name:'myworker'} );
-    myworker.addEventListener('message', function(e) {
+    var myworker = new Worker('./webworker.js', { name: 'myworker' });
+    myworker.addEventListener('message', function (e) {
       console.log('main thred accept message\n', e);
     }, false);
 
@@ -26,25 +29,25 @@
 
     function debounce(fn) {
       var timer = null;
-      return function() {
+      return function () {
         clearTimeout(timer);
-        timer = setTimeout(()=> {
+        timer = setTimeout(() => {
           fn.apply(this, arguments);
-        },500);
+        }, 500);
       }
     }
 
     function throttle(fn) {
-          var cantrue = true;
-          return function() {
-            if (!cantrue) return;
-            cantrue = false;
-            setTimeout(function(){
-              fn.apply(this, arguments);
-              cantrue = true
-            }, 500);
-          }
-        }
+      var cantrue = true;
+      return function () {
+        if (!cantrue) return;
+        cantrue = false;
+        setTimeout(function () {
+          fn.apply(this, arguments);
+          cantrue = true
+        }, 500);
+      }
+    }
 
     function sayHi() {
       console.log('防抖成功');
@@ -58,7 +61,88 @@
     var jie = document.getElementById('jie');
     ip.addEventListener('click', debounce(sayHi));
     jie.addEventListener('click', throttle(sayJie))
+  </script> -->
+
+  <script>
+    // 1.通过原型链继承。所谓原型链就是通过__proto__这个属性去找的，这个属性指向的是prototype
+
+
+    // 2.通过构造函数继承。实际上通过call来完成的，缺点是不能继承原型上的
+
+
+    // 3.公有原型继承
+    // Son.prototype = Father.prototype;
+    // new Son();// 这个实现了继承，但是因为共享了原型，所有会污染父类
+
+
+  //   // 4，圣杯模式
+  //   var inherits = (function() {
+  //     var temp = function(){}
+  //     return function(target, source) {
+  //         temp.prototype = source.prototype;
+  //         target.prototype = new temp();
+  //         target.prototype.constructor = target;
+  //     }
+  //   })();
+
+  //   function child() {
+  //     parent.apply(this, arguments);
+  //   }
+
+  //   function parent() {
+  //     this.name = 'common';
+  //   }
+
+  //   parent.prototype.show = function() {
+  //     console.log('show');
+  //   }
+  //   inherits(child, parent);
+
+  //   var ch1 = new child();
+  //   ch1.show();
+
+
+
+
   </script>
-  
+
+
+  <script>
+
+
+    function _quickSort(num, left, right) {
+      if (left >= right) return; // 若左右指针相遇，待排序数组长度小宇1，即递归的终点，return(注意不能写成left==right，这里left是有可能大于right的)。
+      var i = left, j = right, flag = left; // 定义可移动的左右指针 i，j，定义flag为基数下标。
+      while (i < j) { // 在i<j时不断循环，i一旦与j碰头，则跳出循环。
+        while (num[j] >= num[flag] && j > flag) j--; // j不断左移，找到在num[flag]右侧且比它大的数。
+        if (i >= j) {
+          break; // 由于j可能已被改变，需再次判断i与j是否碰头。
+        }
+        while (num[i] <= num[flag] && i < j) i++; // i不断右移，找到且比基数小的数，且i不能与j碰头。(由于两次交换已合并，此处不需要使得i在flag左侧)
+        // num[flag] num[j] num[i]三者换位，可用ES6语法糖[num[flag],num[j],num[i]] = [num[j],num[i],num[flag]];
+        let temp = num[flag];
+        num[flag] = num[j];
+        num[j] = num[i];
+        num[i] = temp
+        flag = i; // 基数已经在原num[i]的位置，flag同时也要赋值成i。
+      }
+      _quickSort(num, left, flag - 1); // 将flag左边数组作为待排序数组，递归调用。
+      _quickSort(num, flag + 1, right); // 将flag右边数组作为待排序数组，递归调用。
+
+    }
+
+      var arr = [4, 2, 5, 1, 9, 12];
+      _quickSort(arr, 0,arr.length - 1);
+      console.log(arr);
+
+    // var quicksort = (function(){
+    //   var middle = 0;
+    //   var temp = arr[0];
+    //   return function(low, high, arr) {
+
+    //   }
+    // })();
+  </script>
 </body>
+
 </html>

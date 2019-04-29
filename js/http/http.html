@@ -1,16 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <script src="./http.js">
+
+
+/** 
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
+
+  </script>
+  <style>
+    .parent {
+      zoom: 1;
+    }
+
+    .parent:after {
+      content: 'faf';
+      clear: both;
+      height: 0;
+      visibility: hidden;
+      display: block;
+    }
+
+    .angle {
+      width: 0;
+      height: 0;
+      border-top: 40px solid transparent;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 40px solid #ff0000;
+
+    }
+  </style>
 </head>
+
 <body>
-  
+
   <div style="width:100px; height:100px; background:green" id='post'>
     post提交数据
+
+    <input type="text" name="test" value="" placeholder="测试输入框" id="test">
   </div>
+
+  <!-- 测试浮动 -->
+  <div class="parent">
+    <div class="child2" style="width:100px; height:100px;background:blue; float:left">child3</div>
+    <div class="child1" style="width:100px; height:100px;background:red; float:left">child1</div>
+    <!-- <div style="clear:both"></div> -->
+    <div class="child2" style="width:100px; height:100px; background:green; float:left">child2</div>
+  </div>
+
+  <!-- 三角形 -->
+  <div class="angle">
+
+  </div>
+
+  <script>
+    var inputObj = document.getElementById('test');
+    // 在冒泡阶段监听
+    inputObj.addEventListener('touchstart', function (e) {
+      console.log('冒泡阶段touchstart');
+      e.stopPropagation();
+      e.preventDefault(); // 阻止了默认事件。默认事件就是focus和click方法
+      return false;
+    }, false);
+
+    inputObj.addEventListener('touchend', function () {
+      console.log('冒泡阶段touchend');
+    }, false);
+
+    inputObj.addEventListener('click', function (e) {
+      console.log('冒泡阶段click');
+    }, false);
+
+    // inputObj.addEventListener('click', function(e) {
+    //   console.log('捕获阶段的click');
+    //   // e.stopPropagation();
+    // }, true);
+    inputObj.addEventListener('focus', function () {
+      console.log('冒泡的onfocus');
+    }, false);
+  </script>
 
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 
@@ -117,9 +195,9 @@
     </script> -->
   <!-- 当使用content-type为application/json的时候，发送了options请求，为urlencoded的时候没有发options请求，对于get请求两者看不出什么区别 -->
 
-  
+
   <!--  -->
-  
+
   <!-- <script>
       var data1 = {
         name: 'zll',
@@ -143,39 +221,39 @@
       });
     </script> -->
 
-    <!-- post请求到了后端的get方法，也是跨域, get方法请求到了post也是跨域 -->
-    <!-- 如果使用application/x-www-form-urlencoded, 则后端接受请求的方法和get一样，hello3(HttpServletResponse res, String name, String pwd)，这样可以取到，但是设置为application/json的时候则取不到了 -->
-    <!-- 使用了application/json的type后， 报了400的错误，原因是传给后端的type表面了是json，传的data为"name=zll&pwd=123", 所以认为参数不合法，是一个不合理的请求；改为json字符串后，又报了500，原因是后端反序列化失败了，用的jsonobject不对" -->
+  <!-- post请求到了后端的get方法，也是跨域, get方法请求到了post也是跨域 -->
+  <!-- 如果使用application/x-www-form-urlencoded, 则后端接受请求的方法和get一样，hello3(HttpServletResponse res, String name, String pwd)，这样可以取到，但是设置为application/json的时候则取不到了 -->
+  <!-- 使用了application/json的type后， 报了400的错误，原因是传给后端的type表面了是json，传的data为"name=zll&pwd=123", 所以认为参数不合法，是一个不合理的请求；改为json字符串后，又报了500，原因是后端反序列化失败了，用的jsonobject不对" -->
 
-    <!-- 如果说明使用的是表单提交或者www-form-urlencoded的话，则可以使用"name=zll&pwd=123,"" -->
+  <!-- 如果说明使用的是表单提交或者www-form-urlencoded的话，则可以使用"name=zll&pwd=123,"" -->
 
-    <!-- <script>
-        var data1 = {
-          name: 'zll',
-          pwd:'123'
-        };
-        $('#post').on('click', function(e) {
-          $.ajax({
-            url:'http://10.43.8.137:8080/api/v4/hello',
-            type:'POST',
-            dataType:'json',
-            contentType: 'application/x-www-form-urlencoded',
-            // contentType: 'application/json;charset=utf-8',
-            data:"name=zll&pwd=123",
-            success: function(data) {
-              console.log(data);
-            },
-            error: function(err) {
-              console.log(err);
-            }
-          })
-        });
-    </script> -->
-  
+  <script>
+    var data1 = {
+      name: 'zll',
+      pwd: '123'
+    };
+    $('#post').on('click', function (e) {
+      $.ajax({
+        url: 'http://127.0.0.1:8080/api/v4/hello',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded',
+        // contentType: 'application/json;charset=utf-8',
+        data: "name=zll&pwd=123",
+        success: function (data) {
+          console.log(data);
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      })
+    });
+  </script>
 
-    <!-- 上面查看了type,content-type的机制 -->
-    <!-- jsonp跨域, jsonp只支持get请求，不支持post请求， 浏览器只对 xmlHttpRequest请求有跨域限制，对script, img, link ref等是没有跨域限制的，所以jsonp就是利用script标签的src原理进行跨域操作 -->
-    <!-- <script>
+
+  <!-- 上面查看了type,content-type的机制 -->
+  <!-- jsonp跨域, jsonp只支持get请求，不支持post请求， 浏览器只对 xmlHttpRequest请求有跨域限制，对script, img, link ref等是没有跨域限制的，所以jsonp就是利用script标签的src原理进行跨域操作 -->
+  <!-- <script>
         var data1 = {
           name: 'zll',
           pwd:'123'
@@ -197,18 +275,24 @@
           })
         });
     </script> -->
-    <!-- <script>
-        function getDataCallback(data) {
-          console.log(data);
-        }
-      </script>
-    <script src="http://10.43.8.137:8080/api/v5/hello?callback=getDataCallback"></script> -->
+  <script>
+    // function getDataCallback(data) {
+    //   console.log(data);
+    // }
+    window['getDataCallback'] = function (data) {
+      console.log('aaa');
+      console.log(data)
+    }
 
-    <!-- 上面实现了jsonp跨域，后端要在response中setContentType为text/javascript -->
+    window.getHE = "<script>" + "console.log('xss攻击')" + "<script" + "t>";
+  </script>
+  <script src="http://172.16.22.233:8080/api/v5/hello?callback=getHE "></script>
+
+  <!-- 上面实现了jsonp跨域，后端要在response中setContentType为text/javascript -->
 
 
-    <!-- http缓存 -->
-    <script>
+  <!-- http缓存 -->
+  <!-- <script>
         var data1 = {
           name: 'zll',
           pwd:'123'
@@ -228,9 +312,84 @@
             }
           })
         });
-    </script>
+    </script> -->
 
 
+  <script>
+    function throttle(fn, delay, duration) {
+      var timer = null;
+      var begin = new Date();
+      return function() {
+        var self = this, args = arguments;
+        var current = new Date();
+        clearTimeout(timer)
+        if (current - begin >= duration) {
+          fn.apply(self, arguments);
+          begin = current; // 充值时间
+        } else {
+          timer = setTimeout(function(){
+            fn.apply(self, arguments);
+          }, delay)
+        }
+      }
+    }
+  </script>
+
+  <script>
+
+  </script>
+
+
+<script>
+//   给定一个二叉树，计算整个树的坡度。
+
+// 一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是0。
+
+// 整个树的坡度就是其所有节点的坡度之和。
+
+// 示例:
+
+// 输入: 
+//          1
+//        /   \
+//       2     3
+// 输出: 1
+// 解释: 
+// 结点的坡度 2 : 0
+// 结点的坡度 3 : 0
+// 结点的坡度 1 : |2-3| = 1
+// 树的坡度 : 0 + 0 + 1 = 1
+  var findTilt = function(root) {
+    var ans = [0];
+    posOrder(root, ans);
+    return ans[0];
+};
+
+function posOrder(root, ans) {
+    if (root == null) {
+        return 0;
+    }
+    var left = posOrder(root.left, ans);
+    var right = posOrder(root.right, ans);
+    ans[0] += Math.abs(left - right);
+    return left + right + root.val
+}
+</script>
+
+<script>
+  // 判断树的节点深度。深度遍历。深度遍历求树的深度
+  var maxDepth = function(root) {
+    if(root == null) {
+        return 0;
+    } else {
+        var left_height = maxDepth(root.left);
+        var right_height = maxDepth(root.right);
+        return Math.max(left_height, right_height) + 1;
+    }
     
+};
+</script>
+
 </body>
+
 </html>
